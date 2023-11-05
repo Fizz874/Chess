@@ -11,9 +11,10 @@
   Add your open source license, GitHub uses the MIT license.
 -->
 
-# Aquarium Project
+# Chess project
 
-Java Based application to demonstrate how to use OOP principles, for example interface, inheritance.
+Program is intended to serve as a chessboard.
+
 
 </header>
 
@@ -36,46 +37,21 @@ TBD-step-1-information
 
 ### :keyboard: Activity: TBD-step-1-name
 -->
-For example, class <b>InsideContainer</b> is represent the Fish Container for the Aquarium. At its constructor we initialize the baseBackground for the water image, and initialize fishCollection variable to hold the fishes. <br />
-InsideContainer, the paint method. In the paint method we override:
-- Create a buffer image for Double Buffering (Drawing Image in memory first)
-- Draw the background SeaScape
-- Loop all fishCollection and draw the fish current image ( each fish will have two type of image, left or right).<br />
-<p>For example, <b>Fish Abstract Class</b>. Fish is an abstract class, this class cannot be instantiate. We will need to inherits from Fish and make a new class, for example RedFish.
-<p>The <b>RedFish class</b>, use static initializer to load images, for example, fish-red.png and fish-red-right.png You will see that RedFish will be forced to override two abstract methods from Fish class:<br />
-- getLeftImage()<br />
-- getRightImage()<br />
-<p>But many methods its already inherited from Fish class:<br />
-- moveUp()<br />
-- moveDown()<br />
-- moveLeft()<br />
-- moveRight()<br />
-- getCurrentImage()<br />
-- run() - this is for Runnable thread
-<p>Some of them is either protected or private.
-<b>private method</b> in Fish class means the method is only visible inside the Fish class, and cannot be invoke from outside Fish class, for examples:
-- randomStartPosition<br />
-- randomMovementArea<br />
-- randomHorizontalDirection<br />
-- randomVerticalDirection<br />
-- randomMinLeft<br />
-- randomMaxRight<br />
-- randomMinTop<br />
-- randomMaxBottom<br />
-<b>protected method</b> in Fish class means the method is only visible inside the Fish class and it subclasses, so RedFish as a subclass still can invoke it directly:<br />
-- setCurrentImage(Image currentImage)<br /> By providing private modifiers, we hide the complexity of the Fish class, so when we create a new class, extending from Fish, we can only see the public/protected and can override the required method.
-<p><b>Using FishFactory Class</b>
-FishFactory is a class that can be used to instantiate various kinds of Fish, we are recommending to create a fish object using FishFactory.
-The FishFactory will read the index file and load it to program.
-<p><b>Easily adding new Fish</b><br />
-- Create a new class for example YellowFish.java in package.<br />
-- Implements the required method, make sure you use image, for example fish-yellow.png and fish-yellow-right.png<br />
-- Put those images in src/main/resources.<br />
-- Add some line the index file.<br />
+Program will allow only for legal moves to be made. It will highlight checks and detect the end of the game. It will take into account all the special moves that are in the official rules, such as castling, en passant or promotion.
 
-## Example of UI:
-<p align="center"><img align="center" src="https://github.com/akakiev/long-term-project-aquarium-java/blob/main/aqua1.jpg" height="300" width="400" /></p>
-<p align="center"><img align="center" src="https://github.com/akakiev/long-term-project-aquarium-java/blob/main/aqua2.png" height="300" width="400" /></p>
+Possible legal moves of a piece will be displayed by the program after clicking on that particular piece. After making a move, the squares where a given piece previously stood and where it stands now will be marked in color so that the other player knows what move was made.
+
+The implementation will be based on the Game class, responsible for handling game logic and visualizing gameplay.
+
+In addition, there will be a Board class responsible for drawing the board and storing 64 squares.
+The Square class will contain information about coordinates of a given square and what piece is standing on it.
+
+The abstract class Piece, will define the characteristics that each chess piece should contain, including:
+- position on the chessboard
+- a method that determines how to draw a given piece
+- a method that determines all the possible moves of the piece given the current position on the chessboard
+
+The six classes that will inherit from the Piece class are: King, Queen, Rook, Knight, Bishop and Pawn.
 
 <footer>
 
