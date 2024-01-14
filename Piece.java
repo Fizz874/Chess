@@ -7,6 +7,7 @@ abstract public class Piece {
     String color;
     Square place;
     private boolean taken = false;
+    private boolean moved = false;
     abstract void paint(Graphics g);
     abstract ArrayList<Square> possibleMove(Square[][] t, boolean c, Game g);
 
@@ -18,6 +19,10 @@ abstract public class Piece {
     }
     public boolean isTaken(){
         return taken;
+    }
+
+    public boolean isMoved(){
+        return moved;
     }
 
     public void setPlace(Square s){
@@ -32,6 +37,10 @@ abstract public class Piece {
 
     public void setUntaken(){
         taken = false;
+    }
+
+    public void setMoved(){
+        moved = true;
     }
 
 }

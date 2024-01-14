@@ -36,9 +36,9 @@ public class Board extends JPanel{
                     g2D.setColor(lightGreen);
                 } else {
                     if((i+j)%2 == 0){
-                        g2D.setColor(Color.lightGray);
-                    } else {
                         g2D.setColor(Color.white);
+                    } else {
+                        g2D.setColor(Color.lightGray);
                     }
                 }
                 g2D.fillRect(x, y, edgeLen, edgeLen);
@@ -65,7 +65,8 @@ public class Board extends JPanel{
         for(int i =0; i < 8;i++){
             for(int j =0; j < 8; j++){
                 squareTable[i][j].target = false;
-                squareTable[i][j].option = false;
+                squareTable[i][j].option = false;                
+
             }
         }
     }

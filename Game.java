@@ -55,11 +55,17 @@ public class Game extends JPanel implements MouseListener{
 
     private void setPieces(){
 
-        whitePieces[0] = new King("white", b.squareTable[3][7] );
-        whitePieces[1] = new Queen("white", b.squareTable[4][7] );
+        whitePieces[0] = new King("white", b.squareTable[4][7] );
+        whitePieces[1] = new Queen("white", b.squareTable[3][7] );
 
-        blackPieces[0] = new King("black", b.squareTable[3][0]);
-        blackPieces[1] = new Queen("black", b.squareTable[4][0]);
+        whitePieces[6] = new Rook("white",b.squareTable[0][7]);
+        whitePieces[7] = new Rook("white",b.squareTable[7][7]);        
+
+        blackPieces[0] = new King("black", b.squareTable[4][0]);
+        blackPieces[1] = new Queen("black", b.squareTable[3][0]);
+
+        blackPieces[6] = new Rook("black",b.squareTable[0][0]);
+        blackPieces[7] = new Rook("black",b.squareTable[7][0]);    
 
         for(int i = 8; i < 16; i++){
                     whitePieces[i] = new Pawn("white",b.squareTable[i-8][6]);
@@ -100,12 +106,33 @@ public class Game extends JPanel implements MouseListener{
 
         if (newSqr.option || newSqr.target){
 
-            if(newSqr.target ){
+            if(newSqr.target && !newSqr.castling){
                 take(newSqr);
             }
 
+            if(newSqr.castling) {
+                oldSqr.placedPiece.possibleMove(b.squareTable,false, this);
+                int y = (turn == "white")? 7:0;
+
+                if(newSqr.getBoardX()/len > 4){
+                    newSqr = b.squareTable[6][y];
+                    b.squareTable[5][y].placedPiece = b.squareTable[7][y].placedPiece;
+                    b.squareTable[7][y].placedPiece = null;
+                    b.squareTable[5][y].placedPiece.setPlace(b.squareTable[5][y]);
+                    b.squareTable[5][y].placedPiece.setMoved();
+
+                } else {
+
+                    newSqr = b.squareTable[2][y];
+                    b.squareTable[3][y].placedPiece = b.squareTable[0][y].placedPiece;
+                    b.squareTable[0][y].placedPiece = null;
+                    b.squareTable[3][y].placedPiece.setPlace(b.squareTable[3][y]);
+                    b.squareTable[3][y].placedPiece.setMoved();
+                }
+                
+        
             //enpassant
-            if (newSqr.enPassant) { 
+            } else if (newSqr.enPassant) { 
                 oldSqr.placedPiece.possibleMove(b.squareTable,false, this);
                 if(turn == "white"){
                     take(b.squareTable[newSqr.getBoardX()/len][(newSqr.getBoardY()/len) +1]);
@@ -136,7 +163,8 @@ public class Game extends JPanel implements MouseListener{
             newSqr.placedPiece = oldSqr.placedPiece;
             oldSqr.placedPiece = null;
             newSqr.placedPiece.setPlace(newSqr);
-
+            if(!newSqr.placedPiece.isMoved()) newSqr.placedPiece.setMoved();
+        
             moving = false;
 
 
@@ -229,24 +257,26 @@ public class Game extends JPanel implements MouseListener{
         Piece tempPiece;
 
         for(int i =0; i< tab.size();i++){
-                    sqr = tab.get(i);                                           
-                    tempPiece = sqr.placedPiece;
-                    if(tempPiece != null) tempPiece.setTaken();
-                    p.setPlace(sqr);
+                    sqr = tab.get(i);
+                    if(!(sqr.placedPiece != null&&sqr.placedPiece.color == turn)){
+                        tempPiece = sqr.placedPiece;
+                        if(tempPiece != null) tempPiece.setTaken();
+                        p.setPlace(sqr);
 
-                    sqr.placedPiece = p;
-                    if(turn == "white"){
-                        if(isCheck(whitePieces[0].place)){
+                        sqr.placedPiece = p;
+                        if(turn == "white"){
+                            if(isCheck(whitePieces[0].place)){
 
-                            tab.set(i,null);
+                                tab.set(i,null);
+                            }
+                        } else {
+                            if(isCheck(blackPieces[0].place)){
+                                tab.set(i,null);
+                            }
                         }
-                    } else {
-                        if(isCheck(blackPieces[0].place)){
-                            tab.set(i,null);
-                        }
+                        if(tempPiece != null) tempPiece.setUntaken();
+                        sqr.placedPiece = tempPiece;                        
                     }
-                    if(tempPiece != null) tempPiece.setUntaken();
-                    sqr.placedPiece = tempPiece;                        
         }
        pieceSqr.placedPiece = p;
        p.setPlace(pieceSqr);
@@ -302,6 +332,15 @@ public class Game extends JPanel implements MouseListener{
             if(pieces[i] != null){
                 if(!pieces[i].isTaken()){
                     tab = findLegal(pieces[i]);
+
+                    if(pieces[i] instanceof King) {
+                        int y = (pieces[i].color == "white")? 7:0;
+                        b.squareTable[0][y].castling = false;
+                        b.squareTable[7][y].castling = false;
+                        b.squareTable[2][y].castling = false;
+                        b.squareTable[6][y].castling = false;
+                    }
+
                     for(int j = 0; j < tab.size(); j++){
                         if(tab.get(j) != null) return false;
                     }
@@ -315,6 +354,7 @@ public class Game extends JPanel implements MouseListener{
         b = new Board(this);
         setPieces();
         takenPieces.clear();
+        moving = false;
         turn = "white";
         lastSqr =null;
         lastTurn = new Square[2];

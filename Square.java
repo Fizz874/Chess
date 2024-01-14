@@ -17,7 +17,8 @@ public class Square extends JPanel{
     public boolean lastMove = false;
     public boolean target = false;
     public boolean option = false;
-    public boolean enPassant = false;
+    public boolean enPassant = false;    
+    public boolean castling = false;
     public boolean checked = false;
 
     private int boardX;
