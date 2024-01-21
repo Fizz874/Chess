@@ -7,7 +7,6 @@ import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 
 
@@ -20,13 +19,12 @@ public class Square extends JPanel{
     public boolean enPassant = false;    
     public boolean castling = false;
     public boolean checked = false;
+    public Piece placedPiece = null;
 
     private int boardX;
     private int boardY;
     private int len;
-    Piece placedPiece = null;
 
-    JButton b;
     Square(int a, int b, int edgeLen){
         len = edgeLen;
         boardX = len*a;

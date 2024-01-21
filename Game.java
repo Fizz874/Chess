@@ -11,23 +11,19 @@ import javax.swing.JPanel;
 
 
 public class Game extends JPanel implements MouseListener{
-    Board b;
-    Piece[] blackPieces = new Piece[16];
-    Piece[] whitePieces = new Piece[16];
+    public Board b;
+    public Square[] lastTurn = new Square[2];
+    public int len;
+    public String turn = "white";
 
-    public ArrayList<Piece> takenPieces = new ArrayList<Piece>();
-    Square[] lastTurn = new Square[2];
-    Square checkMark;
+    private Piece[] blackPieces = new Piece[16];
+    private Piece[] whitePieces = new Piece[16];
 
-    int pressX;
-    int pressY;
-
-    int len;
-
-    boolean check = false;
-    boolean moving = false;
-    String turn = "white";
-    Square lastSqr = null;
+    private int pressX;
+    private int pressY;
+    private boolean moving = false;
+    private Square lastSqr = null;
+    private Square checkMark;
 
     Game(){
         len = 80;
@@ -57,13 +53,19 @@ public class Game extends JPanel implements MouseListener{
 
         whitePieces[0] = new King("white", b.squareTable[4][7] );
         whitePieces[1] = new Queen("white", b.squareTable[3][7] );
-
+        whitePieces[2] = new Bishop("white",b.squareTable[2][7]);
+        whitePieces[3] = new Bishop("white",b.squareTable[5][7]);
+        whitePieces[4] = new Knight("white",b.squareTable[1][7]);
+        whitePieces[5] = new Knight("white",b.squareTable[6][7]);
         whitePieces[6] = new Rook("white",b.squareTable[0][7]);
         whitePieces[7] = new Rook("white",b.squareTable[7][7]);        
 
         blackPieces[0] = new King("black", b.squareTable[4][0]);
         blackPieces[1] = new Queen("black", b.squareTable[3][0]);
-
+        blackPieces[2] = new Bishop("black",b.squareTable[2][0]);
+        blackPieces[3] = new Bishop("black",b.squareTable[5][0]);
+        blackPieces[4] = new Knight("black",b.squareTable[1][0]);
+        blackPieces[5] = new Knight("black",b.squareTable[6][0]);
         blackPieces[6] = new Rook("black",b.squareTable[0][0]);
         blackPieces[7] = new Rook("black",b.squareTable[7][0]);    
 
@@ -158,6 +160,12 @@ public class Game extends JPanel implements MouseListener{
             lastTurn[0] = oldSqr;
             lastTurn[1] = newSqr;
 
+
+            //promotion
+            if(oldSqr.placedPiece instanceof Pawn && (newSqr.getBoardY()/len == 7 || newSqr.getBoardY() == 0)){
+                promotion(oldSqr);
+            }
+
             //usunięcie figury ze starego pola i starego pola z figury
             //dodanie do nowego
             newSqr.placedPiece = oldSqr.placedPiece;
@@ -239,7 +247,6 @@ public class Game extends JPanel implements MouseListener{
         if(newSqr.placedPiece != null){
             Piece attacked = newSqr.placedPiece;
             attacked.setTaken();
-            takenPieces.add(attacked);
 
             newSqr.placedPiece = null;
             newSqr.target = false;
@@ -353,7 +360,6 @@ public class Game extends JPanel implements MouseListener{
     public void restart(){
         b = new Board(this);
         setPieces();
-        takenPieces.clear();
         moving = false;
         turn = "white";
         lastSqr =null;
@@ -368,14 +374,11 @@ public class Game extends JPanel implements MouseListener{
         int choice;
         if (!isDraw){
             if(turn == "white"){
-                //System.out.println("\nColor black won!!");
                 choice = JOptionPane.showOptionDialog(this, "Black won","Game over",0,JOptionPane.PLAIN_MESSAGE,null, options, null);
             } else {
-                //System.out.println("\nColor white won!!");
                 choice = JOptionPane.showOptionDialog(this, "White won","Game over",0,JOptionPane.PLAIN_MESSAGE,null, options, null);            
             }
         } else {
-                //System.out.println("\nDraw!!");
                 choice = JOptionPane.showOptionDialog(this, "It's a draw","Game over",0,JOptionPane.PLAIN_MESSAGE,null, options, null);                        
         }
 
@@ -384,6 +387,54 @@ public class Game extends JPanel implements MouseListener{
         }
 
         
+
+
+    }
+    private void promotion(Square sqr){
+        //Wybór na co 
+        String[] options = {"Knight","Bishop", "Rook", "Queen"};
+        int choice = JOptionPane.showOptionDialog(this, "Pick one: ","Promotion",0,JOptionPane.PLAIN_MESSAGE,null, options, null);
+        int idx = -1;
+        Piece[] pieces; 
+
+            if(turn == "white"){
+                pieces = whitePieces;
+                for(int i = 0; i <8;i++){
+                    if(whitePieces[8+i] == sqr.placedPiece){
+                        idx = i;
+                        break;
+                    }
+                }
+            } else {
+                pieces = blackPieces;
+                for(int i = 0; i <8;i++){
+                    if(blackPieces[8+i] == sqr.placedPiece){
+                        idx = i;
+                        break;
+                    }
+                }
+
+            }
+
+        switch(choice){
+            case 0:
+                pieces[idx+8] = new Knight(turn,sqr);
+                pieces[idx+8].place.placedPiece = pieces[idx+8];
+            break;
+            case 1:
+                pieces[idx+8] = new Bishop(turn,sqr);
+                pieces[idx+8].place.placedPiece = pieces[idx+8];
+            break;
+            case 2:
+                pieces[idx+8] = new Rook(turn,sqr);
+                pieces[idx+8].place.placedPiece = pieces[idx+8];
+            break;
+            case -1:
+            case 3:
+                pieces[idx+8] = new Queen(turn,sqr);
+                pieces[idx+8].place.placedPiece = pieces[idx+8];
+            break;
+        } 
 
 
     }

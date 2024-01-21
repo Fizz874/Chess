@@ -4,9 +4,8 @@ import javax.swing.*;
 
 public class Board extends JPanel{
 
-    Game parentGame;
-    Square [][] squareTable = new Square[8][8];
-    Square lastSqr = null;
+    private Game parentGame;
+    public Square [][] squareTable = new Square[8][8];
     public int edgeLen;  
 
     Board(Game g) {

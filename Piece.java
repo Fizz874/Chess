@@ -2,14 +2,14 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 abstract public class Piece {
-    int x;
-    int y;
-    String color;
-    Square place;
+    protected int x;
+    protected int y;
+    protected String color;
+    protected Square place;
     private boolean taken = false;
     private boolean moved = false;
-    abstract void paint(Graphics g);
-    abstract ArrayList<Square> possibleMove(Square[][] t, boolean c, Game g);
+    public abstract void paint(Graphics g);
+    public abstract ArrayList<Square> possibleMove(Square[][] t, boolean c, Game g);
 
     public int getX(){
         return x;
