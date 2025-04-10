@@ -41,3 +41,20 @@ In total, there are six derived classes: **Pawn**, **Knight**, **Bishop**, **Roo
 
 In the project, I used three types of access modifiers: *public*, *private* and *protected*. Access to private attributes, which were needed outside of their own object, was done through *getters* and *setters*.
 
+
+### Gallery
+
+<table>
+  <tr>
+    <td>UML diagram</td>
+    <td>Chessboard view</td>
+  </tr>
+  
+  <tr>
+    <td><img src="Docs/ChessUML.drawio.jpg" alt="UML" ></td>
+    <td><img src="Docs/example.png" alt="Example"></td>
+  </tr>
+
+</table>
+
+
